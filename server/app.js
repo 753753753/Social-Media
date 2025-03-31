@@ -35,9 +35,9 @@ app.use('/post', postroutes)
 app.use('/comment', commentroutes)
 
 const PORT = process.env.PORT;
-const HOST = 'localhost'; // Allows external devices to connect
-// const HOST = '0.0.0.0'; for mobile 
+// const HOST = 'localhost'; // Allows external devices to connect
+// // const HOST = '0.0.0.0'; for mobile 
 
-app.listen(PORT, HOST, () => {
-  console.log(`Server running at http://${HOST}:${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server running at ${PORT}`);
 });
