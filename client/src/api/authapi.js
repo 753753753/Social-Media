@@ -33,8 +33,9 @@ export const loginUser = async (formData) => {
             credentials: 'include',
             body: JSON.stringify(formData),
         });
-
-        return await response.json();
+        const data = await response.json();
+        console.log(data)
+        return data;
     } catch (error) {
         console.error("Error logging in user:", error);
         return false;
