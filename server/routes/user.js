@@ -40,7 +40,6 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    console.log("fjfjj")
     try {
         let { email, password } = req.body;
 
@@ -76,7 +75,7 @@ router.get('/logout', async (req, res) => {
 });
 
 router.get('/check-auth', isloggedin, async (req, res) => {
-
+    console.log("inside-check-auth")
     try {
         // Assuming req.user is already set by your authentication middleware.
         const profile = await profileModel.findOne({ userId: req.user._id });
@@ -84,6 +83,7 @@ router.get('/check-auth', isloggedin, async (req, res) => {
     } catch (error) {
         res.status(500).json({ isAuthenticated: false, error: error.message });
     }
+    console.log("exist check-auth")
 });
 
 router.post('/updateprofile', isloggedin, upload.single('image'), async (req, res) => {
