@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getOtherUserPosts } from "../../api/authapi";
 import { fetchFollowStats, fetchuserFollowStats, toggleFollow } from "../../features/auth/followSlice";
-import UserfollowingModal from '../../modal/UserFollowingModal';
+import UserfollowingModal from '../../modal/UserfollowingModal';
 import UserfollowersModal from '../../modal/UserfollowersModal';
 function UserprofileDetail({ userprofile }) {
     const { userid } = useParams();
