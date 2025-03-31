@@ -10,7 +10,7 @@ const expressSession = require('express-session')
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: "http://localhost:5173", // Allow frontend on mobile
+  origin: ["http://localhost:5173" , "https://social-media-server-s0tb.onrender.com"], // Allow frontend on mobile
   //  http://192.168.31.33:5173 for mobile
   credentials: true,
 }));
