@@ -1,6 +1,6 @@
 import React from 'react';
 import { CiSaveDown2 } from "react-icons/ci";
-import AllsavedPost from '../../components/ui/AllSavedPost';
+import AllsavedPost from '../../components/ui/AllsavedPost';
 function SavedPost() {
    
     return (
