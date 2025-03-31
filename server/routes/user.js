@@ -40,11 +40,12 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
+    console.log("entering")
     try {
         let { email, password } = req.body;
 
         let user = await userModel.findOne({ email });
-
+        console.log(user);
         if (!user) return res.json(false);
 
         bcrypt.compare(password, user.password, function (err, result) {
@@ -61,6 +62,8 @@ router.post('/login', async (req, res) => {
         console.log(error);
         res.status(500).json({ message: "Server error" });
     }
+
+    console.log("exit")
 });
 
 router.get('/logout', async (req, res) => {
