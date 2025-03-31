@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from "react-router-dom";
 import { fetchUserProfileById } from '../../features/auth/profileSlice';
 import UserPost from '../ui/UserPost';
-import UserProfileDetail from '../ui/UserProfileDetail';
+import UserProfileDetail from '../ui/UserprofileDetail';
 
 function UserProfile() {
   const { userid } = useParams();
