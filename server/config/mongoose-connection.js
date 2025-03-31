@@ -1,14 +1,18 @@
+require('dotenv').config(); // Add this at the top
+
 const mongoose = require('mongoose');
-const config = require('config');
 const dbgr = require('debug')("development : mongoose");
 
-mongoose.connect(`${config.get("MONGODB_URI")}/socialmedia`)
+mongoose.connect(process.env.Mongo_url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
 .then(() => {
-    console.log("MongoDB Connected!");  // Add this for visibility
+    console.log("✅ MongoDB Connected!");
     dbgr("Connected to MongoDB");
 })
 .catch(err => {
-    console.log("MongoDB Connection Error:", err); // Add this for errors
+    console.error("❌ MongoDB Connection Error:", err);
     dbgr(err);
 });
 
