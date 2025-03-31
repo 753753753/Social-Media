@@ -18,8 +18,7 @@ app.use(cookieParser());
 app.use(expressSession({ resave: false, saveUninitialized: false, secret: process.env.EXPRESS_SESSION_SECRET }))
 
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  console.log("Headers:", req.headers);
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`)
   console.log("Body:", req.body);
   next();
 });
