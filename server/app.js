@@ -34,7 +34,7 @@ app.use('/saved', savedroutes)
 app.use('/post', postroutes)
 app.use('/comment', commentroutes)
 
-const PORT = 3000;
+const PORT = process.env.PORT;
 const HOST = 'localhost'; // Allows external devices to connect
 // const HOST = '0.0.0.0'; for mobile 
 
