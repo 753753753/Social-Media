@@ -1,8 +1,8 @@
 
-// const BASE_URL = "https://social-media-server-s0tb.onrender.com"; 
+const BASE_URL = "https://social-media-server-s0tb.onrender.com"; 
 // const BASE_URL = "http://192.168.31.33:3000"; // For mobile
 // https://social-media-server-s0tb.onrender.com
-const BASE_URL = "http://localhost:3000"; 
+// const BASE_URL = "http://localhost:3000"; 
 
 // Authentication
 
