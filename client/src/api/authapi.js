@@ -35,6 +35,7 @@ export const loginUser = async (formData) => {
             body: JSON.stringify(formData),
         });
         const data = await response.json();
+        console.log("Login data")
         console.log(data)
         return data;
     } catch (error) {
@@ -49,12 +50,14 @@ export const fetchProfileAPI = async () => {
             method: 'GET',
             credentials: 'include',
         });
-
+        const data = await response.json();
+        console.log("user dtata")
+        console.log(data)
+        console.log(response.ok)
         if (!response.ok) {
             throw new Error("Failed to fetch profile");
         }
-
-        return await response.json();
+        return data;
     } catch (error) {
         console.error("Error fetching user profile:", error);
         throw error;

@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import { Navigate, Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./ProtectedRoutes";
 import AuthLayout from './auth/AuthLayout';
@@ -8,7 +7,6 @@ import Register from './auth/form/Register';
 import PostDetail from './components/shared/PostDetail';
 import UserProfile from './components/shared/UserProfile';
 import EditProfile from './components/ui/EditProfile';
-import { fetchProfile } from './features/auth/authSlice';
 import './index.css';
 import Layout from './routes/Layout';
 import CreatePost from './routes/createpost/CreatePost';
@@ -18,12 +16,12 @@ import User from "./routes/people/User";
 import ProfileLayout from './routes/profile/ProfileLayout';
 import SavedPost from './routes/saved/SavedPost';
 function App() {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  // On app load, check if the user is authenticated
-  useEffect(() => {
-    dispatch(fetchProfile());
-  }, [dispatch]);
+  // // On app load, check if the user is authenticated
+  // useEffect(() => {
+  //   dispatch(fetchProfile());
+  // }, [dispatch]);
 
 
   return (
