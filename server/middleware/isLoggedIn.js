@@ -3,6 +3,7 @@ const userModel = require("../models/UserSchema");
 
 module.exports = async function (req, res, next) {
     console.log("enter on middleware")
+    console.log("cokkie" , req.cookies)
     if (!req.cookies.token) {
         console.log("Unauthorized. Please log in.")
         return res.status(401).json({ message: "Unauthorized. Please log in." });
