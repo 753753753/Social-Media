@@ -30,7 +30,11 @@ router.post('/register', async (req, res) => {
         });
 
         let token = generateToken(user);
-        res.cookie("token", token, { httpOnly: true, secure: false,  sameSite: "None"});
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // Set secure in production
+            sameSite: "None"
+        });        
         res.json(true);
 
     } catch (error) {
@@ -54,7 +58,11 @@ router.post('/login', async (req, res) => {
                 return res.json(false)
             }
             let token = generateToken(user);
-            res.cookie("token", token, { httpOnly: true, secure: false,  sameSite: "None" });
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production", // Set secure in production
+                sameSite: "None"
+            });            
             res.json(true)
         })
 
@@ -68,7 +76,12 @@ router.post('/login', async (req, res) => {
 
 router.get('/logout', async (req, res) => {
     try {
-        res.cookie("token", "");
+        res.cookie("token", "", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "None",
+            expires: new Date(0) // Expire the cookie
+        });
         res.json(true)
 
     } catch (error) {

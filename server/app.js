@@ -8,9 +8,10 @@ const expressSession = require('express-session')
 
 // Middle Ware
 app.use(cors({
-  origin: ["http://localhost:5173" , "https://social-media-client-l4pk.onrender.com"], // Allow frontend on mobile
-  //  http://192.168.31.33:5173 for mobile
-  credentials: true,
+  origin: ["http://localhost:5173", "https://social-media-client-l4pk.onrender.com"],
+  credentials: true, // Allows cookies to be sent
+  allowedHeaders: ["Content-Type", "Authorization"], // Ensure headers are allowed
+  methods: ["GET", "POST", "PUT", "DELETE"] // Allow all necessary methods
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
