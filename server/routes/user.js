@@ -30,7 +30,7 @@ router.post('/register', async (req, res) => {
         });
 
         let token = generateToken(user);
-        res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "Lax" });
+        res.cookie("token", token, { httpOnly: true, secure: false,  sameSite: "None"});
         res.json(true);
 
     } catch (error) {
@@ -54,7 +54,7 @@ router.post('/login', async (req, res) => {
                 return res.json(false)
             }
             let token = generateToken(user);
-            res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "Lax" });
+            res.cookie("token", token, { httpOnly: true, secure: false,  sameSite: "None" });
             res.json(true)
         })
 
