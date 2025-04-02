@@ -1,5 +1,5 @@
-// const BASE_URL = "http://localhost:3000";
-const BASE_URL = "https://social-media-server-s0tb.onrender.com"; 
+const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "https://social-media-server-s0tb.onrender.com"; 
 
 // Save token in localStorage
 const saveToken = (token) => {
