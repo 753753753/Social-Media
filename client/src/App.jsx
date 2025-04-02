@@ -38,7 +38,7 @@ function App() {
         </Route>
 
         <Route element={<Layout />}>
-          <Route element={<ProtectedRoutes />}>
+          {/* <Route element={<ProtectedRoutes />}> */}
             <Route path="/home" element={<Home />} />
             <Route path="/profile" element={<ProfileLayout />} />
             <Route path="/post/:id" element={<PostDetail />} />
@@ -49,7 +49,7 @@ function App() {
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/user/:userid" element={<UserProfile />} />
           </Route>
-        </Route>
+        {/* </Route> */}
       </Routes>
     </main>
   );
