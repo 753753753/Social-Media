@@ -30,15 +30,15 @@ router.post('/register', async (req, res) => {
         });
 
         let token = generateToken(user);
-        //  res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "Lax" });
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true, // Cookies only work on HTTPS
-            sameSite: "None", // Required for cross-origin cookies
-            path: "/" // Ensure it's accessible across all routes
-        });
+        // //  res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "Lax" });
+        // res.cookie("token", token, {
+        //     httpOnly: true,
+        //     secure: true, // Cookies only work on HTTPS
+        //     sameSite: "None", // Required for cross-origin cookies
+        //     path: "/" // Ensure it's accessible across all routes
+        // });
 
-        res.json(true);
+        res.status(201).json({ token, user: { id: user._id, name, email } });
 
     } catch (error) {
         console.log(error);
@@ -52,7 +52,6 @@ router.post('/login', async (req, res) => {
         let { email, password } = req.body;
 
         let user = await userModel.findOne({ email });
-        console.log(user);
         if (!user) return res.json(false);
 
         bcrypt.compare(password, user.password, function (err, result) {
@@ -60,15 +59,15 @@ router.post('/login', async (req, res) => {
             if (!result) {
                 return res.json(false)
             }
-            let token = generateToken(user);
-            // res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "Lax" });
-            res.cookie("token", token, {
-                httpOnly: true,
-                secure: true, // Cookies only work on HTTPS
-                sameSite: "None", // Required for cross-origin cookies
-                path: "/" // Ensure it's accessible across all routes
-            });        
-            res.json(true)
+            // let token = generateToken(user);
+            // // res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "Lax" });
+            // res.cookie("token", token, {
+            //     httpOnly: true,
+            //     secure: true, // Cookies only work on HTTPS
+            //     sameSite: "None", // Required for cross-origin cookies
+            //     path: "/" // Ensure it's accessible across all routes
+            // });        
+            res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
         })
 
     } catch (error) {
@@ -81,13 +80,13 @@ router.post('/login', async (req, res) => {
 
 router.get('/logout', async (req, res) => {
     try {
-        res.cookie("token", "", {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "None",
-            expires: new Date(0) // Expire the cookie
-        });
-        // res.cookie("token", "");
+        // res.cookie("token", "", {
+        //     httpOnly: true,
+        //     secure: process.env.NODE_ENV === "production",
+        //     sameSite: "None",
+        //     expires: new Date(0) // Expire the cookie
+        // });
+        // // res.cookie("token", "");
         res.json(true)
 
     } catch (error) {

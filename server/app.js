@@ -1,24 +1,21 @@
-// Required
 const express = require('express');
 const app = express();
 const cors = require("cors");
 require('dotenv').config();
-const cookieParser = require('cookie-parser');
 const expressSession = require('express-session')
 
-// Middle Ware
+// Middleware
 app.use(cors({
   origin: ["http://localhost:5173", "https://social-media-client-l4pk.onrender.com"],
-  credentials: true, // Allows cookies to be sent
-  allowedHeaders: ["Content-Type", "Authorization"], // Ensure headers are allowed
-  methods: ["GET", "POST", "PUT", "DELETE"] // Allow all necessary methods
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: ["GET", "POST", "PUT", "DELETE"]
 }));
-// Ensure backend trusts proxies for secure cookies
-app.set("trust proxy", 1);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(expressSession({ resave: false, saveUninitialized: false, secret: process.env.EXPRESS_SESSION_SECRET }))
+
+app.use(expressSession({ resave: false, saveUninitialized: false, secret: process.env.EXPRESS_SESSION_SECRET }));
 
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`)
@@ -36,17 +33,14 @@ const savedroutes = require('./routes/saved')
 const userroutes = require('./routes/user')
 
 // Handling Routes
-app.use('/', userroutes)
+app.use('/user', userroutes)
 app.use('/follow', followroutes)
 app.use('/like', likeroutes)
 app.use('/saved', savedroutes)
 app.use('/post', postroutes)
 app.use('/comment', commentroutes)
 
-
 const PORT = process.env.PORT;
-// const HOST = 'localhost'; // Allows external devices to connect
-// // const HOST = '0.0.0.0'; for mobile 
 
 app.listen(PORT, () => {
   console.log(`Server running at ${PORT}`);
