@@ -33,8 +33,9 @@ router.post('/register', async (req, res) => {
         //  res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "Lax" });
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // Set secure in production
-            sameSite: "None"
+            secure: true, // Cookies only work on HTTPS
+            sameSite: "None", // Required for cross-origin cookies
+            path: "/" // Ensure it's accessible across all routes
         });
 
         res.json(true);
@@ -63,9 +64,10 @@ router.post('/login', async (req, res) => {
             // res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "Lax" });
             res.cookie("token", token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production", // Set secure in production
-                sameSite: "None"
-            });            
+                secure: true, // Cookies only work on HTTPS
+                sameSite: "None", // Required for cross-origin cookies
+                path: "/" // Ensure it's accessible across all routes
+            });        
             res.json(true)
         })
 
