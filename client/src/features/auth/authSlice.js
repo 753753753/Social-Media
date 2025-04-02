@@ -7,6 +7,7 @@ export const fetchProfile = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const data = await fetchProfileAPI();
+      console.log('Fetched user profile:', data);  // Log the fetched profile to ensure it's correct
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -17,9 +18,19 @@ export const fetchProfile = createAsyncThunk(
 // Thunk for logging in
 export const loginUserThunk = createAsyncThunk(
   'auth/login',
-  async (credentials, { rejectWithValue }) => {
+  async (credentials, { dispatch, rejectWithValue }) => {
     try {
       const data = await loginUser(credentials);
+      if (data) {
+        // Fetch user profile after successful login
+        // console.log("Fetching user profile...");
+
+        const profile = await dispatch(fetchProfile());  // Dispatch fetchProfile and wait for the response
+
+        // After fetching profile, return the profile data (action.payload) so it can be stored in Redux state
+        return profile.payload;
+      }
+
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -27,12 +38,22 @@ export const loginUserThunk = createAsyncThunk(
   }
 );
 
+
 // Thunk for registering a new user
 export const registerUserThunk = createAsyncThunk(
   'auth/register',
-  async (credentials, { rejectWithValue }) => {
+  async (credentials, { dispatch, rejectWithValue }) => {
     try {
       const data = await registerUser(credentials);
+
+      if (data) {
+        // Fetch user profile after successful registration
+        const profile = await dispatch(fetchProfile());  // Dispatch fetchProfile and wait for the response
+
+        // After fetching profile, return the profile data (action.payload) so it can be stored in Redux state
+        return profile.payload;
+      }
+
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -54,13 +75,21 @@ export const performLogout = createAsyncThunk(
 );
 
 const initialState = {
-  user: localStorage.getItem('user')
-    ? JSON.parse(localStorage.getItem('user'))
-    : null,
+  user: (() => {
+    const user = localStorage.getItem('user');
+    try {
+      return user ? JSON.parse(user) : null;
+    } catch (error) {
+      console.error("Error parsing user from localStorage:", error);
+      return null;  // Return null if parsing fails
+    }
+  })(),
   loading: false,
   error: null,
   logoutStatus: null,
 };
+
+
 
 const authSlice = createSlice({
   name: 'auth',

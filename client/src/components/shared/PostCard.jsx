@@ -8,7 +8,6 @@ import { createComment, fetchComments } from "../../features/auth/commentSlice";
 import { fetchLikeData, toggleLike } from "../../features/auth/likeSlice";
 import { fetchallPosts } from "../../features/auth/postSlice";
 import { fetchSavedData, toggleSave } from "../../features/auth/saveSlice";
-
 // Helper to convert a Buffer to a Base64 string.
 const bufferToBase64 = (bufferObj) => {
   if (!bufferObj || !bufferObj.data) return "";
@@ -25,7 +24,6 @@ function PostCard() {
   // Select logged-in user from auth slice.
   // Assuming the logged in user object has a structure like { user: { _id, name, ... }, profile: { username, profilePicture, ... } }
   const user = useSelector((state) => state.auth.user);
-
   // Redux state selectors.
   const { allPosts, loading: postsLoading } = useSelector((state) => state.posts);
   const { likedPosts, likeCounts, loading: likesLoading } = useSelector((state) => state.likes);

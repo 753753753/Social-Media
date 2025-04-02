@@ -33,7 +33,6 @@ const UserPost = () => {
   const commentsByPost = useSelector((state) => state.comments.commentsByPost);
   const commentsLoading = useSelector((state) => state.comments.loading);
   const user = useSelector((state) => state.auth.user);
-
   // Fetch posts for the given user id
   useEffect(() => {
     if (userid) {
@@ -41,16 +40,23 @@ const UserPost = () => {
     }
   }, [dispatch, userid]);
 
+  console.log(userPosts)
+
   // Fetch like data and comments for each post once posts are available.
+
+
   useEffect(() => {
     if (Array.isArray(userPosts) && userPosts.length > 0) {
       const posts = userPosts.map((item) => item._id);
+
       dispatch(fetchLikeData(posts));
+
       posts.forEach((postId) => {
         dispatch(fetchComments(postId));
       });
     }
   }, [dispatch, userPosts]);
+
 
   const handleLikePost = (postId) => {
     dispatch(toggleLike(postId));
@@ -113,7 +119,7 @@ const UserPost = () => {
           return (
             <div
               key={post._id}
-              className="bg-black md:bg-[#09090A] flex flex-col rounded-2xl shadow-lg border border-[#101012] overflow-hidden"
+              className="bg-black md:bg-[#09090A] flex flex-col rounded-2xl shadow-lg border border-[#101012] overflow-hidden mt-10"
             >
               {/* Image Container */}
               <div className="w-full h-[200px] sm:h-[250px] overflow-hidden rounded-t-lg">
@@ -124,41 +130,19 @@ const UserPost = () => {
                   onClick={() => navigate(`/post/${post._id}`)}
                 />
               </div>
-
               {/* Overlay Section: Profile & Icons */}
-              <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between text-gray-400">
-                {/* Profile Section */}
-                <div
-                  className="flex items-center space-x-1.5 cursor-pointer mb-2 sm:mb-0 relative"
-
-                >
-                  {/* Save Icon */}
-                  <span
-                    className="absolute top-0 right-0 p-2 cursor-pointer"
-                    onClick={() => handleSavePost(post._id)}
-                  >
-                    {savedPosts[post._id] ? (
-                      <CiSaveDown2 className="text-xl text-yellow-500" />
-                    ) : (
-                      <CiSaveUp2 className="text-xl text-[#877EFF] hover:text-yellow-500" />
-                    )}
-                  </span>
-                </div>
-
-                {/* Like & Comment Icons */}
-                <div className="flex items-center space-x-2.5 mt-1 pl-1">
+              <div className="p-4 flex items-center justify-between text-gray-400">
+                <div className="flex items-center space-x-4">
                   <span
                     className="text-white cursor-pointer flex items-center gap-1 hover:scale-110 transition-transform duration-200"
                     onClick={() => handleLikePost(post._id)}
                   >
                     {!isLiked ? (
-                      <CiHeart className="text-[#877EFF] text-xl" />
+                      <CiHeart className="text-[#877EFF] text-2xl" />
                     ) : (
-                      <FaHeart className="text-red-500 text-xl" />
+                      <FaHeart className="text-red-500 text-2xl" />
                     )}
-                    <span className="text-sm font-medium">
-                      {likeCount > 0 ? likeCount : ""}
-                    </span>
+                    <span className="text-sm font-medium">{likeCount > 0 ? likeCount : ""}</span>
                   </span>
                   <span
                     className="flex items-center gap-1 cursor-pointer hover:scale-110 transition-transform duration-200 text-white"
@@ -168,7 +152,18 @@ const UserPost = () => {
                     <span className="text-sm font-medium">{postComments.length}</span>
                   </span>
                 </div>
+                <span
+                  className="cursor-pointer"
+                  onClick={() => handleSavePost(post._id)}
+                >
+                  {savedPosts[post._id] ? (
+                    <CiSaveDown2 className="text-xl text-yellow-500" />
+                  ) : (
+                    <CiSaveUp2 className="text-xl text-[#877EFF] hover:text-yellow-500" />
+                  )}
+                </span>
               </div>
+
 
               {/* Comment Section */}
               {showComments[post._id] && (

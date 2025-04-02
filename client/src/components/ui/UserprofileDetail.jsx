@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getOtherUserPosts } from "../../api/authapi";
 import { fetchFollowStats, fetchuserFollowStats, toggleFollow } from "../../features/auth/followSlice";
-import UserfollowingModal from '../../modal/UserfollowingModal';
 import UserfollowersModal from '../../modal/UserfollowersModal';
+import UserfollowingModal from '../../modal/UserfollowingModal';
 function UserprofileDetail({ userprofile }) {
     const { userid } = useParams();
     const [post, setpost] = useState(0);
@@ -37,10 +37,10 @@ function UserprofileDetail({ userprofile }) {
 
 
     return (
-        <div className="bg-black text-white w-full px-4 py-5 sm:px-8">
-            <div className="flex flex-col sm:flex-row items-center sm:justify-between w-full">
+        <div className="bg-black text-white w-full px-4 sm:px-8 py-5">
+            <div className="flex flex-col md:flex-row items-center md:justify-between gap-4">
                 {/* Profile Info */}
-                <div className="flex flex-col items-center sm:flex-row sm:items-center sm:gap-6">
+                <div className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
                     {/* Profile Picture */}
                     <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-blue-500 flex items-center justify-center overflow-hidden shadow-lg border-2 border-white">
                         {userprofile?.profilePicture ? (
@@ -57,40 +57,40 @@ function UserprofileDetail({ userprofile }) {
                     </div>
 
                     {/* User Details */}
-                    <div className="mt-3 sm:mt-0 text-center sm:text-left">
-                        <h1 className="text-lg sm:text-xl font-bold">
+                    <div>
+                        <h1 className="text-lg md:text-xl font-bold md:pt-4">
                             {userprofile?.userId?.name}
                         </h1>
-                        <p className="text-xs sm:text-sm text-gray-400">
+                        <p className="text-xs md:text-sm text-gray-400">
                             {userprofile?.username || "@newuser"}
                         </p>
-                        <p className="text-xs sm:text-sm mt-2">
-                            {userprofile?.bio ||
-                                "Updating my bio, one decade at a time."}
+                        <p className="text-xs md:text-sm text-white mb-2 pt-1">
+                            {userprofile?.bio || "Updating my bio, one decade at a time."}
                         </p>
-                        {/* Follow Stats */}
-                        <div className="flex justify-center sm:justify-start mt-3 space-x-4">
-                            <div className="flex flex-col items-center cursor-pointer">
-                                <p className="font-bold text-[#5D5FEF] text-sm">{post}</p>
-                                <p className="text-white text-xs">Posts</p>
-                            </div>
-                            <div
-                                className="flex flex-col items-center cursor-pointer"
-                                onClick={() => setShowFollowersModal(true)}
-                            >
-                                <p className="font-bold text-[#5D5FEF] text-sm">
-                                    {userfollowingCount}
-                                </p>
-                                <p className="text-white text-xs">Followers</p>
-                            </div>
-                            <div
-                                className="flex flex-col items-center cursor-pointer"
-                                onClick={() => setShowFollowingModal(true)}
-                            >
-                                <p className="font-bold text-[#5D5FEF] text-sm">
-                                    {userfollowersCount}
-                                </p>
-                                <p className="text-white text-xs">Following</p>
+
+                        {/* Posts, Followers, and Following */}
+                        <div className="flex flex-col md:flex-row items-center gap-4">
+                            <div className="flex justify-center md:justify-start text-xs md:text-sm space-x-4">
+                                <div className="flex space-x-1">
+                                    <p className="font-bold text-[#5D5FEF]">{post}</p>
+                                    <p className="text-white">Posts</p>
+                                </div>
+                                {/* Followers Count */}
+                                <div
+                                    className="flex space-x-1 cursor-pointer"
+                                    onClick={() => setShowFollowersModal(true)}
+                                >
+                                    <p className="font-bold text-[#5D5FEF]">{userfollowingCount}</p>
+                                    <p className="text-white">Followers</p>
+                                </div>
+                                {/* Following Count */}
+                                <div
+                                    className="flex space-x-1 cursor-pointer"
+                                    onClick={() => setShowFollowingModal(true)}
+                                >
+                                    <p className="font-bold text-[#5D5FEF]">{userfollowersCount}</p>
+                                    <p className="text-white">Following</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -98,10 +98,7 @@ function UserprofileDetail({ userprofile }) {
 
                 {/* Follow Button */}
                 <button
-                    className={`mt-4 sm:mt-0 px-4 py-2 rounded-2xl transition cursor-pointer ${followedUsers[userid]
-                            ? "bg-white text-black border border-gray-300 hover:bg-gray-100"
-                            : "bg-[#877EFF] text-white hover:bg-[#877EFF]"
-                        }`}
+                    className={`bg-[#1F1F22] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-black transition cursor-pointer flex items-center gap-2 ${followedUsers[userid] ? "border border-gray-300 bg-white text-black hover:bg-gray-100" : "bg-[#877EFF] text-white hover:bg-[#6A5AE0]"}`}
                     onClick={() => handleFollow(userid)}
                 >
                     {followedUsers[userid] ? "Following" : "Follow"}
@@ -126,6 +123,7 @@ function UserprofileDetail({ userprofile }) {
                 users={user?.user}
             />
         </div>
+
     )
 }
 

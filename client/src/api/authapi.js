@@ -2,25 +2,23 @@
 const BASE_URL = "https://social-media-server-s0tb.onrender.com"; 
 // const BASE_URL = "http://192.168.31.33:3000"; // For mobile
 // https://social-media-server-s0tb.onrender.com
-// const BASE_URL = "http://localhost:3000"; 
+// const BASE_URL = "http://localhost:3000";
 
 // Authentication
-
 export const registerUser = async (formData) => {
     try {
         const response = await fetch(`${BASE_URL}/register`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
             body: JSON.stringify(formData),
         });
-
-        return await response.json();
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'Registration failed');
+        return data;
     } catch (error) {
         console.error("Error registering user:", error);
-        return false;
+        throw error;
     }
 };
 
@@ -28,19 +26,16 @@ export const loginUser = async (formData) => {
     try {
         const response = await fetch(`${BASE_URL}/login`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
             body: JSON.stringify(formData),
         });
         const data = await response.json();
-        console.log("Login data")
-        console.log(data)
+        if (!response.ok) throw new Error(data.message || 'Login failed');
         return data;
     } catch (error) {
         console.error("Error logging in user:", error);
-        return false;
+        throw error;
     }
 };
 
@@ -51,12 +46,7 @@ export const fetchProfileAPI = async () => {
             credentials: 'include',
         });
         const data = await response.json();
-        console.log("user dtata")
-        console.log(data)
-        console.log(response.ok)
-        if (!response.ok) {
-            throw new Error("Failed to fetch profile");
-        }
+        if (!response.ok) throw new Error("Failed to fetch profile");
         return data;
     } catch (error) {
         console.error("Error fetching user profile:", error);
@@ -70,10 +60,12 @@ export const logout = async () => {
             method: 'GET',
             credentials: 'include',
         });
-
-        return await response.json();
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Logout failed");
+        return data;
     } catch (error) {
         console.error("Error logging out user:", error);
+        throw error;
     }
 };
 

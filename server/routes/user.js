@@ -30,11 +30,13 @@ router.post('/register', async (req, res) => {
         });
 
         let token = generateToken(user);
+        //  res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "Lax" });
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // Set secure in production
             sameSite: "None"
-        });        
+        });
+
         res.json(true);
 
     } catch (error) {
@@ -58,6 +60,7 @@ router.post('/login', async (req, res) => {
                 return res.json(false)
             }
             let token = generateToken(user);
+            // res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "Lax" });
             res.cookie("token", token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production", // Set secure in production
@@ -82,6 +85,7 @@ router.get('/logout', async (req, res) => {
             sameSite: "None",
             expires: new Date(0) // Expire the cookie
         });
+        // res.cookie("token", "");
         res.json(true)
 
     } catch (error) {
@@ -144,35 +148,35 @@ router.get('/getposts', isloggedin, async (req, res) => {
 
 router.get('/getallprofile', isloggedin, async (req, res) => {
     try {
-      // Get all user documents.
-      const getallprofile = await userModel.find();
-  
-      // Exclude the logged-in user's document.
-      const filteredUsers = getallprofile.filter(
-        (user) => user._id.toString() !== req.user._id.toString()
-      );
-  
-      // Extract user IDs from the filtered users.
-      const userIds = filteredUsers.map((user) => user._id);
-  
-      // Get profiles for these users.
-      const profiles = await profileModel.find({ userId: { $in: userIds } }).lean();
-  
-      // Attach the profile to each user.
-      const getalluser = filteredUsers.map((user) => {
-        const userProfile = profiles.find(
-          (profile) => profile.userId.toString() === user._id.toString()
+        // Get all user documents.
+        const getallprofile = await userModel.find();
+
+        // Exclude the logged-in user's document.
+        const filteredUsers = getallprofile.filter(
+            (user) => user._id.toString() !== req.user._id.toString()
         );
-        return { ...user.toObject(), userProfile: userProfile || null };
-      });
-  
-      res.status(200).json({ success: true, getallprofile: getalluser });
+
+        // Extract user IDs from the filtered users.
+        const userIds = filteredUsers.map((user) => user._id);
+
+        // Get profiles for these users.
+        const profiles = await profileModel.find({ userId: { $in: userIds } }).lean();
+
+        // Attach the profile to each user.
+        const getalluser = filteredUsers.map((user) => {
+            const userProfile = profiles.find(
+                (profile) => profile.userId.toString() === user._id.toString()
+            );
+            return { ...user.toObject(), userProfile: userProfile || null };
+        });
+
+        res.status(200).json({ success: true, getallprofile: getalluser });
     } catch (error) {
-      console.error("Error fetching profiles:", error);
-      res.status(500).json({ success: false, message: "Profile not found" });
+        console.error("Error fetching profiles:", error);
+        res.status(500).json({ success: false, message: "Profile not found" });
     }
-  });
-  
+});
+
 
 router.get('/getuserprofile/:id', isloggedin, async (req, res) => {
     try {

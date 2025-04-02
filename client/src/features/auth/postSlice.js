@@ -1,6 +1,6 @@
 // src/features/posts/postSlice.js
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getpost, getuserpost, uploadpost , getPostDetail , getOtherUserPosts } from '../../api/authapi';
+import { getOtherUserPosts, getpost, getPostDetail, getuserpost, uploadpost } from '../../api/authapi';
 
 export const fetchUserPosts = createAsyncThunk(
   "posts/fetchUserPosts",
@@ -106,27 +106,36 @@ export const fetchotherPosts = createAsyncThunk(
   async (userid, { rejectWithValue }) => {
     try {
       const result = await getOtherUserPosts(userid);
-      if (result?.userpost) {
-        const updatedPosts = result.userpost.map((post) => {
-          if (post.image?.data) {
-            const uint8Array = new Uint8Array(post.image.data);
-            const base64String = btoa(String.fromCharCode(...uint8Array));
-            return {
-              ...post,
-              image: `data:image/png;base64,${base64String}`,
-            };
-          }
-          return post;
-        });
-        return { otherposts: updatedPosts };
-      } else {
-        return rejectWithValue("No posts found");
+      console.log("API Response:", result);
+
+      if (!Array.isArray(result.userpost)) {
+        console.error("userpost is not an array:", result.userpost);
+        return rejectWithValue("Invalid user posts data");
       }
+
+      const updatedPosts = result.userpost.map((post) => {
+        console.log("Processing Post:", post);
+        
+        if (post.image && post.image.data) {
+          console.log("Processing Image:", post.image.data.length); // Check image data length
+          const uint8Array = new Uint8Array(post.image.data);
+          const base64String = btoa(
+            uint8Array.reduce((data, byte) => data + String.fromCharCode(byte), "")
+          );
+          return { ...post, image: `data:image/png;base64,${base64String}` };
+        }
+        
+        return post;
+      });
+
+      console.log("Updated Posts:", updatedPosts);
+      return { otherposts: updatedPosts };
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
+
 
 const postSlice = createSlice({
   name: 'posts',
