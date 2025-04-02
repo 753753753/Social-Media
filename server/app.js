@@ -33,7 +33,7 @@ const savedroutes = require('./routes/saved')
 const userroutes = require('./routes/user')
 
 // Handling Routes
-app.use('/user', userroutes)
+app.use('/', userroutes)
 app.use('/follow', followroutes)
 app.use('/like', likeroutes)
 app.use('/saved', savedroutes)

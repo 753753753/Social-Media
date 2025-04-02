@@ -5,7 +5,7 @@ module.exports = async function (req, res, next) {
     console.log("Entering middleware...");
 
     const token = req.header("Authorization")?.split(" ")[1]; // Extract Bearer token
-
+    console.log(token)
     if (!token) {
         return res.status(401).json({ message: "Unauthorized. Please log in." });
     }
@@ -21,6 +21,7 @@ module.exports = async function (req, res, next) {
         req.user = user;
         console.log("Middleware exit...");
         next();
+        console.log("sucesss")
     } catch (error) {
         console.log("Invalid token");
         return res.status(401).json({ message: "Invalid token. Please log in again." });
