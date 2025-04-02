@@ -33,12 +33,12 @@ const savedroutes = require('./routes/saved')
 const userroutes = require('./routes/user')
 
 // Handling Routes
-app.use('/', userroutes)
 app.use('/follow', followroutes)
 app.use('/like', likeroutes)
 app.use('/saved', savedroutes)
 app.use('/post', postroutes)
 app.use('/comment', commentroutes)
+app.use('/', userroutes)
 
 const PORT = process.env.PORT;
 
