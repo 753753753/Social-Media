@@ -20,7 +20,7 @@ const getAuthHeaders = () => {
 // Authentication
 export const registerUser = async (formData) => {
     try {
-        const response = await fetch(`${BASE_URL}/user/register`, {
+        const response = await fetch(`${BASE_URL}/register`, {
             method: 'POST',
             headers: getAuthHeaders(),
             body: JSON.stringify(formData),
@@ -39,7 +39,7 @@ export const registerUser = async (formData) => {
 
 export const loginUser = async (formData) => {
     try {
-        const response = await fetch(`${BASE_URL}/user/login`, {
+        const response = await fetch(`${BASE_URL}/login`, {
             method: 'POST',
             headers: getAuthHeaders(),
             body: JSON.stringify(formData),
