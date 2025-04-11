@@ -98,7 +98,7 @@ function UserprofileDetail({ userprofile }) {
 
                 {/* Follow Button */}
                 <button
-                    className={`bg-[#1F1F22] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-black transition cursor-pointer flex items-center gap-2 ${followedUsers[userid] ? "border border-gray-300 bg-white text-black hover:bg-gray-100" : "bg-[#877EFF] text-white hover:bg-[#6A5AE0]"}`}
+                    className={`bg-[#1F1F22] text-black px-4 py-2 rounded-lg text-sm font-semibold hover:bg-black transition cursor-pointer flex items-center gap-2 ${followedUsers[userid] ? "border border-gray-300 bg-white text-black hover:bg-gray-100" : "bg-[#877EFF] text-white hover:bg-[#6A5AE0]"}`}
                     onClick={() => handleFollow(userid)}
                 >
                     {followedUsers[userid] ? "Following" : "Follow"}

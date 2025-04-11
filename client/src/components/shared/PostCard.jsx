@@ -121,8 +121,8 @@ function PostCard() {
         const postComments = [...fetchedComments, ...optimisticComments];
 
         return (
-          <div className="w-full md:w-[30rem] lg:w-[35rem] xl:w-[35rem] cursor-pointer">
-            <div className="bg-black md:bg-[#09090A] md:p-6 rounded-2xl mb-6 shadow-lg md:border md:border-[#101012]" key={post._id}>
+          <div className="w-full md:w-[30rem] lg:w-[35rem] xl:w-[35rem] cursor-pointer" key={post._id}>
+            <div className="bg-black md:bg-[#09090A] md:p-6 rounded-2xl mb-6 shadow-lg md:border md:border-[#101012]">
               <div className="pl-1 md:pl-0">
                 {/* Profile Section */}
                 <div

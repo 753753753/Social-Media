@@ -1,5 +1,5 @@
-// const BASE_URL = "http://localhost:3000";
-const BASE_URL = "https://social-media-server-s0tb.onrender.com"; 
+const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "https://social-media-server-s0tb.onrender.com"; 
 
 // Save token in localStorage
 const saveToken = (token) => {
@@ -12,9 +12,13 @@ const getToken = () => {
 };
 
 // Helper function to get headers with token
-const getAuthHeaders = () => {
+const getAuthHeaders = (isFormData = false) => {
     const token = getToken();
-    return token ? { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" } : { "Content-Type": "application/json" };
+    const headers = token ? { "Authorization": `Bearer ${token}` } : {};
+    if (!isFormData) {
+        headers["Content-Type"] = "application/json";
+    }
+    return headers;
 };
 
 // Authentication
@@ -94,17 +98,18 @@ export const updateprofile = async (formData) => {
     try {
         const response = await fetch(`${BASE_URL}/updateprofile`, {
             method: 'POST',
-            headers: getAuthHeaders(),
+            headers: getAuthHeaders(true),
             credentials: 'include',
-            body: formData,
+            body: formData, // Not FormData
         });
 
         if (!response.ok) {
             const errorText = await response.text();
             throw new Error(`HTTP error! Status: ${response.status} - ${errorText}`);
         }
-
-        return await response.json();
+        const data = await response.json();
+        console.log(data)
+        return data;
     } catch (error) {
         console.error("Error updating profile:", error);
         return { error: error.message };
@@ -152,7 +157,7 @@ export const uploadpost = async (formdata) => {
     try {
         const response = await fetch(`${BASE_URL}/post/uploadpost`, {
             method: 'POST',
-            headers: getAuthHeaders(),
+            headers: getAuthHeaders(true),
             credentials: 'include', // Ensures cookies are included in requests
             body: formdata, // ✅ Send FormData directly
         });

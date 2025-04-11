@@ -25,12 +25,12 @@ app.use((req, res, next) => {
 
 // Import Routes
 const db = require("./config/mongoose-connection");
-const commentroutes = require("./routes/comment")
-const followroutes = require('./routes/follow')
-const likeroutes = require('./routes/like')
-const postroutes = require('./routes/post')
-const savedroutes = require('./routes/saved')
-const userroutes = require('./routes/user')
+const commentroutes = require("./controllers/comment")
+const followroutes = require('./controllers/follow')
+const likeroutes = require('./controllers/like')
+const postroutes = require('./controllers/post')
+const savedroutes = require('./controllers/saved')
+const userroutes = require('./controllers/user')
 
 // Handling Routes
 app.use('/follow', followroutes)

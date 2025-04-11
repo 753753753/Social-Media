@@ -110,6 +110,7 @@ router.get('/check-auth', isloggedin, async (req, res) => {
 router.post('/updateprofile', isloggedin, upload.single('image'), async (req, res) => {
     try {
         const { username, bio, name } = req.body;
+        console.log(username)
         console.log(req.file)
         const profilePicture = req.file ? req.file.buffer : null;  // Check if file exists
         await userModel.findOneAndUpdate({ _id: req.user._id }, { name });
@@ -122,13 +123,12 @@ router.post('/updateprofile', isloggedin, upload.single('image'), async (req, re
         res.status(200).json({ success: true, profile: updatedProfile });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: "Error updating profile" });
+        res.status(400).json({ success: false, message: "Error updating profile" });
     }
 });
 
 
 router.get('/getprofile', isloggedin, async (req, res) => {
-
     try {
         const getprofile = await profileModel.findOne({ userId: req.user._id }).populate("userId");
         res.status(200).json({ success: true, profile: getprofile });

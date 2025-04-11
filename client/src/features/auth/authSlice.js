@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchProfileAPI, loginUser, logout, registerUser } from "../../api/authapi";
-
 // Thunk to fetch the logged-in user's profile
-export const fetchProfile = createAsyncThunk(
+export const fetchAuthProfile  = createAsyncThunk(
   'auth/fetchProfile',
   async (_, { rejectWithValue }) => {
     try {
@@ -25,7 +24,7 @@ export const loginUserThunk = createAsyncThunk(
         // Fetch user profile after successful login
         // console.log("Fetching user profile...");
 
-        const profile = await dispatch(fetchProfile());  // Dispatch fetchProfile and wait for the response
+        const profile = await dispatch(fetchAuthProfile ());  // Dispatch fetchProfile and wait for the response
 
         // After fetching profile, return the profile data (action.payload) so it can be stored in Redux state
         return profile.payload;
@@ -48,7 +47,7 @@ export const registerUserThunk = createAsyncThunk(
 
       if (data) {
         // Fetch user profile after successful registration
-        const profile = await dispatch(fetchProfile());  // Dispatch fetchProfile and wait for the response
+        const profile = await dispatch(fetchAuthProfile ());  // Dispatch fetchProfile and wait for the response
 
         // After fetching profile, return the profile data (action.payload) so it can be stored in Redux state
         return profile.payload;
@@ -97,16 +96,16 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchProfile.pending, (state) => {
+      .addCase(fetchAuthProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchProfile.fulfilled, (state, action) => {
+      .addCase(fetchAuthProfile.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
         localStorage.setItem('user', JSON.stringify(action.payload));
       })
-      .addCase(fetchProfile.rejected, (state, action) => {
+      .addCase(fetchAuthProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         state.user = null;

@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "../../toaster/Toaster";
 
 const Home = () => {
   const location = useLocation();
+
   useEffect(() => {
     if (location.state?.showLoginToast) {
       toast.success("Login successful! 🎉");
@@ -19,11 +20,15 @@ const Home = () => {
     if (location.state?.showprofileToast) {
       toast.success("Edit successful! 🎉");
     }
-  }, []);
+  }, [location.state]);
 
   return (
     <>
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        closeOnClick
+      />
       <div className="grid grid-cols-1 md:grid-cols-4">
         {/* Main Feed Section */}
         <div className="md:col-span-3 h-screen py-4 md:p-4">

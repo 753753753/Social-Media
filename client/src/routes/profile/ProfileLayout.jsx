@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from "react-router-dom";
 import Buttons from '../../components/shared/Buttons';
 import ProfileDetail from '../../components/shared/ProfileDetail';
 import MyPost from '../../components/ui/MyPost';
 import MylikedPost from '../../components/ui/MylikedPost';
-import { fetchProfile } from '../../features/auth/authSlice';
+import { fetchAuthProfile } from '../../features/auth/authSlice';
 
 function ProfileLayout() {
     const [activeView, setActiveView] = useState("posts");
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
-
+    const location = useLocation();
     useEffect(() => {
         if (!user) {
-            dispatch(fetchProfile());
+            dispatch(fetchAuthProfile());
         }
     }, [dispatch, user]);
+
 
     return (
         <div className="flex flex-col bg-black text-white h-full text-xs sm:text-sm md:text-xl">

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getprofile, getUserProfile, updateprofile } from '../../api/authapi';
+import { fetchAuthProfile } from '../auth/authSlice';
 
 // Helper: Convert profilePicture Buffer to Base64 string.
 const bufferToBase64 = (bufferObj) => {
@@ -16,7 +17,6 @@ export const fetchProfile = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const data = await getprofile();
-
       // If the API returns an error object, reject the thunk.
       if (data.error) {
         return rejectWithValue(data.error);
@@ -39,10 +39,11 @@ export const fetchProfile = createAsyncThunk(
 // Async thunk for updating the logged-in user's profile.
 export const updateProfile = createAsyncThunk(
   'profile/updateProfile',
-  async (formData, { rejectWithValue }) => {
+  async (formData, { dispatch, rejectWithValue }) => {
     try {
       const data = await updateprofile(formData);
-
+      await dispatch(fetchAuthProfile());
+      console.log("dkdk"); // This should now execute
       if (data.error || !data.success) {
         return rejectWithValue(data.error || 'Error updating profile');
       }
@@ -58,6 +59,7 @@ export const updateProfile = createAsyncThunk(
     }
   }
 );
+
 
 // NEW: Async thunk for fetching another user's profile by their ID.
 export const fetchUserProfileById = createAsyncThunk(
