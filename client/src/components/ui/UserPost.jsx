@@ -106,132 +106,129 @@ const UserPost = () => {
   }
 
   return (
-    <div className="py-4 px-0 md:px-4 bg-black w-full">
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {userPosts.map((post) => {
-          const isLiked = likedPosts[post._id];
-          const likeCount = likeCounts[post._id] || 0;
-          // Merge fetched and optimistic comments.
-          const fetchedComments = commentsByPost[post._id] || [];
-          const optimisticComments = localComments[post._id] || [];
-          const postComments = [...fetchedComments, ...optimisticComments];
+<div className="w-full py-6 px-4 bg-black">
+  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-auto items-start">
+    {userPosts.map((post) => {
+      const isLiked = likedPosts[post._id];
+      const likeCount = likeCounts[post._id] || 0;
+      const fetchedComments = commentsByPost[post._id] || [];
+      const optimisticComments = localComments[post._id] || [];
+      const postComments = [...fetchedComments, ...optimisticComments];
 
-          return (
-            <div
-              key={post._id}
-              className="bg-black md:bg-[#09090A] flex flex-col rounded-2xl shadow-lg border border-[#101012] overflow-hidden mt-10"
-            >
-              {/* Image Container */}
-              <div className="w-full h-[200px] sm:h-[250px] overflow-hidden rounded-t-lg">
-                <img
-                  src={post.image}
-                  alt="Post Thumbnail"
-                  className="w-full h-full object-cover"
-                  onClick={() => navigate(`/post/${post._id}/user/${post.userId._id}`)}
-                />
-              </div>
-              {/* Overlay Section: Profile & Icons */}
-              <div className="p-4 flex items-center justify-between text-gray-400">
-                <div className="flex items-center space-x-4">
-                  <span
-                    className="text-white cursor-pointer flex items-center gap-1 hover:scale-110 transition-transform duration-200"
-                    onClick={() => handleLikePost(post._id)}
-                  >
-                    {!isLiked ? (
-                      <CiHeart className="text-[#877EFF] text-2xl" />
-                    ) : (
-                      <FaHeart className="text-red-500 text-2xl" />
-                    )}
-                    <span className="text-sm font-medium">{likeCount > 0 ? likeCount : ""}</span>
-                  </span>
-                  <span
-                    className="flex items-center gap-1 cursor-pointer hover:scale-110 transition-transform duration-200 text-white"
-                    onClick={() => toggleComments(post._id)}
-                  >
-                    <FaRegComment className="text-[#877EFF] text-xl" />
-                    <span className="text-sm font-medium">{postComments.length}</span>
-                  </span>
-                </div>
-                <span
-                  className="cursor-pointer"
-                  onClick={() => handleSavePost(post._id)}
-                >
-                  {savedPosts[post._id] ? (
-                    <CiSaveDown2 className="text-xl text-yellow-500" />
-                  ) : (
-                    <CiSaveUp2 className="text-xl text-[#877EFF] hover:text-yellow-500" />
-                  )}
-                </span>
-              </div>
+      return (
+        <div
+          key={post._id}
+          className="bg-[#09090A] border border-[#1a1a1a] rounded-2xl overflow-hidden shadow-md flex flex-col"
+        >
+          {/* Post Image */}
+          <div
+            className="h-[250px] sm:h-[300px] cursor-pointer"
+            onClick={() => navigate(`/post/${post._id}/user/${post.userId._id}`)}
+          >
+            <img
+              src={post.image}
+              alt="Post Thumbnail"
+              className="w-full h-full object-cover"
+            />
+          </div>
 
+          {/* Icons and Actions */}
+          <div className="flex justify-between items-center px-4 py-2 text-white">
+            <div className="flex gap-4 items-center">
+              <span
+                className="flex items-center gap-1 cursor-pointer hover:scale-110 transition"
+                onClick={() => handleLikePost(post._id)}
+              >
+                {isLiked ? (
+                  <FaHeart className="text-red-500 text-xl" />
+                ) : (
+                  <CiHeart className="text-[#877EFF] text-2xl" />
+                )}
+                <span className="text-sm">{likeCount > 0 ? likeCount : ""}</span>
+              </span>
 
-              {/* Comment Section */}
-              {showComments[post._id] && (
-                <div className="px-4 pb-4 bg-[#09090A]">
-                  {commentsLoading ? (
-                    <p className="text-gray-300 text-sm">Loading comments...</p>
-                  ) : (
-                    <div className="max-h-40 overflow-y-auto space-y-2 mb-2">
-                      {postComments.length > 0 ? (
-                        postComments.map((comment, index) => (
-                          <div key={index} className="flex items-center space-x-2">
-                            <div className="w-8 h-8 rounded-full bg-gray-500 overflow-hidden border">
-                              {comment.userProfile?.profilePicture ? (
-                                <img
-                                  src={`data:image/png;base64,${comment.userProfile.profilePicture}`}
-                                  alt={comment.userProfile.username}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <span className="text-white text-sm font-bold flex items-center justify-center h-full">
-                                  {comment.userProfile?.username?.charAt(0).toUpperCase() || "U"}
-                                </span>
-                              )}
-                            </div>
-                            <div className="bg-gray-800 p-1 rounded-xl flex items-center px-2">
-                              <p className="text-gray-300 text-sm">
-                                <span className="font-bold">
-                                  {comment.userProfile?.username || "@newuser"}:
-                                </span>{" "}
-                                {comment.content}
-                              </p>
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-gray-300 text-sm">No comments yet.</p>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Add Comment Input */}
-                  <div className="flex items-center">
-                    <input
-                      type="text"
-                      placeholder="Add a comment..."
-                      className="w-full bg-[#09090A] text-gray-300 p-2 rounded-lg focus:outline-none text-sm"
-                      value={newComment[post._id] || ""}
-                      onChange={(e) =>
-                        setNewComment((prev) => ({
-                          ...prev,
-                          [post._id]: e.target.value,
-                        }))
-                      }
-                    />
-                    <button
-                      onClick={() => handleAddComment(post._id)}
-                      className="ml-2 text-[#877EFF] hover:text-white text-sm"
-                    >
-                      Post
-                    </button>
-                  </div>
-                </div>
-              )}
+              <span
+                className="flex items-center gap-1 cursor-pointer hover:scale-110 transition"
+                onClick={() => toggleComments(post._id)}
+              >
+                <FaRegComment className="text-[#877EFF] text-lg" />
+                <span className="text-sm">{postComments.length}</span>
+              </span>
             </div>
-          );
-        })}
-      </div>
-    </div>
+
+            <span onClick={() => handleSavePost(post._id)} className="cursor-pointer">
+              {savedPosts[post._id] ? (
+                <CiSaveDown2 className="text-yellow-500 text-xl" />
+              ) : (
+                <CiSaveUp2 className="text-[#877EFF] text-xl hover:text-yellow-500" />
+              )}
+            </span>
+          </div>
+
+            {/* Comments Section */}
+            {showComments[post._id] && (
+              <div className="px-4 pb-4 text-sm text-white space-y-2">
+                <div className="max-h-32 overflow-y-auto space-y-2">
+                  {commentsLoading ? (
+                    <p className="text-gray-400">Loading comments...</p>
+                  ) : postComments.length > 0 ? (
+                    postComments.map((comment, i) => (
+                      <div key={i} className="flex gap-2 items-start">
+                        <div className="w-8 h-8 rounded-full bg-gray-600 overflow-hidden">
+                          {comment.userProfile?.profilePicture ? (
+                            <img
+                              src={`data:image/png;base64,${comment.userProfile.profilePicture}`}
+                              alt="User"
+                              className="object-cover w-full h-full"
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-full text-sm font-bold">
+                              {comment.userProfile?.username?.charAt(0).toUpperCase() || "U"}
+                            </div>
+                          )}
+                        </div>
+                        <div className="bg-[#1a1a1a] px-3 py-1 rounded-xl text-gray-300">
+                          <span className="font-semibold">
+                            {comment.userProfile?.username || "@user"}:
+                          </span>{" "}
+                          {comment.content}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-400">No comments yet.</p>
+                  )}
+                </div>
+  
+                {/* Add Comment Input */}
+                <div className="flex items-center mt-2">
+                  <input
+                    type="text"
+                    placeholder="Write a comment..."
+                    className="flex-1 bg-[#1a1a1a] px-1 md:px-3 py-2 rounded-lg text-white placeholder-gray-400 text-sm focus:outline-none"
+                    value={newComment[post._id] || ""}
+                    onChange={(e) =>
+                      setNewComment((prev) => ({
+                        ...prev,
+                        [post._id]: e.target.value,
+                      }))
+                    }
+                  />
+                  <button
+                    onClick={() => handleAddComment(post._id)}
+                    className="ml-1 md:ml-2 text-[#877EFF] hover:text-white text-sm"
+                  >
+                    Post
+                  </button>
+                </div>
+              </div>
+            )}
+        </div>
+      );
+    })}
+  </div>
+</div>
+
   );
 };
 

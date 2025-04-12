@@ -124,141 +124,128 @@ function MylikedPost() {
     setNewComment((prev) => ({ ...prev, [postId]: "" }));
   };
   return (
-    <div className="py-4 px-0 md:px-4 bg-black w-full">
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {allLikedPosts.map((item) => {
-        const post = item?.postId;
-        const postId = post?._id;
-        // Combine fetched comments and optimistic comments.
-        const fetchedComments = commentsByPost[postId] || [];
-        const optimisticComments = localComments[postId] || [];
-        const postComments = [...fetchedComments, ...optimisticComments];
-        return (
-          <div key={postId} className="bg-black md:bg-[#09090A] flex flex-col md:rounded-2xl shadow-lg md:border md:border-[#101012] overflow-hidden">
-            {/* Image Container */}
-            <div className="w-full h-[200px] sm:h-[250px] overflow-hidden rounded-t-lg">
-              <img
-                src={`data:image/png;base64,${post?.image}`}
-                alt="Post Thumbnail"
-                className="w-full h-full object-cover"
-                onClick={() => navigate(`/post/${post._id}/user/${post.userId}`)}
-              />
-            </div>
-  
-            {/* Overlay Section */}
-          {/* Overlay Section */}
-<div className="p-4 flex flex-col md:flex-row md:items-center justify-between text-gray-400">
-  {/* Profile Section */}
-  <div className="flex items-center space-x-2 cursor-pointer relative">
-    {/* Save Icon */}
-    <span
-      className="absolute top-0 right-0 p-2 cursor-pointer md:static md:ml-4"
-      onClick={() => handleSavePost(postId)}
-    >
-      {!savedPosts[postId] ? (
-        <CiSaveUp2 className="text-[#877EFF] text-2xl hover:text-yellow-500 transition-colors duration-200" />
-      ) : (
-        <CiSaveDown2 className="text-2xl text-yellow-500" />
-      )}
-    </span>
-  </div>
+    <div className="w-full py-6 px-4 bg-black">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-auto items-start">
+        {allLikedPosts.map((item) => {
+          const post = item?.postId;
+          const postId = post?._id;
 
-  {/* Like & Comment Icons */}
-  <div className="flex items-center space-x-4 mt-2 md:mt-0">
-    {/* Like Button */}
-    <span
-      className="flex items-center gap-1 cursor-pointer hover:scale-110 transition-transform duration-200 text-white"
-      onClick={() => handleLikePost(postId)}
-    >
-      {!likedPosts[postId] ? (
-        <CiHeart className="text-[#877EFF] text-2xl hover:text-red-500 transition-colors duration-200" />
-      ) : (
-        <FaHeart className="text-red-500 text-2xl" />
-      )}
-      <span className="text-sm font-medium">
-        {likeCounts[postId] > 0 ? likeCounts[postId] : ""}
-      </span>
-    </span>
+          const isLiked = likedPosts[postId];
+          const likeCount = likeCounts[postId] || 0;
+          const fetchedComments = commentsByPost[postId] || [];
+          const optimisticComments = localComments[postId] || [];
+          const allComments = [...fetchedComments, ...optimisticComments];
 
-    {/* Comment Button */}
-    <span
-      className="flex items-center gap-1 cursor-pointer hover:scale-110 transition-transform duration-200 text-white"
-      onClick={() => toggleComments(postId)}
-    >
-      <FaRegComment className="text-[#877EFF] text-2xl hover:text-green-400 transition-colors duration-200" />
-      <span className="text-sm font-medium">{postComments.length}</span>
-    </span>
-  </div>
-</div>
+          return (
+            <div
+              key={postId}
+              className="bg-[#09090A] border border-[#1a1a1a] rounded-2xl overflow-hidden shadow-md flex flex-col"
+            >
+              <div
+                className="h-[250px] sm:h-[300px] cursor-pointer"
+                onClick={() => navigate(`/post/${postId}/user/${post.userId}`)}
+              >
+                <img
+                  src={`data:image/png;base64,${post?.image}`}
+                  alt="Post"
+                  className="w-full h-full object-cover"
+                />
+              </div>
 
-  
-            {/* Comment Section */}
-            {showComments[postId] && (
-              <div className="px-4 pb-4 bg-[#09090A]">
-                {commentsLoading ? (
-                  <p className="text-gray-300 text-sm">Loading comments...</p>
-                ) : (
-                  <div className="max-h-40 overflow-y-auto space-y-2 mb-2">
-                    {postComments.length > 0 ? (
-                      postComments.map((comment, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                          <div className="w-8 h-8 rounded-full bg-gray-500 overflow-hidden border">
+              <div className="flex justify-between items-center px-4 py-2 text-white">
+                <div className="flex gap-4 items-center">
+                  <span
+                    className="flex items-center gap-1 cursor-pointer hover:scale-110 transition"
+                    onClick={() => handleLikePost(postId)}
+                  >
+                    {isLiked ? (
+                      <FaHeart className="text-red-500 text-xl" />
+                    ) : (
+                      <CiHeart className="text-[#877EFF] text-2xl" />
+                    )}
+                    <span className="text-sm">{likeCount > 0 ? likeCount : ""}</span>
+                  </span>
+
+                  <span
+                    className="flex items-center gap-1 cursor-pointer hover:scale-110 transition"
+                    onClick={() => toggleComments(postId)}
+                  >
+                    <FaRegComment className="text-[#877EFF] text-lg" />
+                    <span className="text-sm">{allComments.length}</span>
+                  </span>
+                </div>
+
+                <span onClick={() => handleSavePost(postId)} className="cursor-pointer">
+                  {savedPosts[postId] ? (
+                    <CiSaveDown2 className="text-yellow-500 text-xl" />
+                  ) : (
+                    <CiSaveUp2 className="text-[#877EFF] text-xl hover:text-yellow-500" />
+                  )}
+                </span>
+              </div>
+
+              {showComments[postId] && (
+                <div className="px-4 pb-4 text-sm text-white space-y-2">
+                  <div className="max-h-32 overflow-y-auto space-y-2">
+                    {commentsLoading ? (
+                      <p className="text-gray-400">Loading comments...</p>
+                    ) : allComments.length > 0 ? (
+                      allComments.map((comment, idx) => (
+                        <div key={idx} className="flex gap-2 items-start">
+                          <div className="w-8 h-8 rounded-full bg-gray-600 overflow-hidden">
                             {comment.userProfile?.profilePicture ? (
                               <img
                                 src={`data:image/png;base64,${comment.userProfile.profilePicture}`}
-                                alt={comment.userProfile.username}
-                                className="w-full h-full object-cover"
+                                alt="User"
+                                className="object-cover w-full h-full"
                               />
                             ) : (
-                              <span className="text-white text-sm font-bold flex items-center justify-center h-full">
-                                {comment.userProfile?.username?.charAt(0).toUpperCase() || "U"}
-                              </span>
+                              <div className="flex items-center justify-center h-full text-sm font-bold">
+                                {comment.userProfile?.username?.charAt(0).toUpperCase()}
+                              </div>
                             )}
                           </div>
-                          <div className="bg-gray-800 p-1 rounded-xl flex items-center px-2">
-                            <p className="text-gray-300 text-sm">
-                              <span className="font-bold">
-                                {comment.userProfile?.username || "@newuser"}:
-                              </span>{" "}
-                              {comment.content}
-                            </p>
+                          <div className="bg-[#1a1a1a] px-3 py-1 rounded-xl text-gray-300">
+                            <span className="font-semibold">
+                              {comment.userProfile?.username || "@user"}:
+                            </span>{" "}
+                            {comment.content}
                           </div>
                         </div>
                       ))
                     ) : (
-                      <p className="text-gray-300 text-sm">No comments yet.</p>
+                      <p className="text-gray-400">No comments yet.</p>
                     )}
                   </div>
-                )}
-  
-                {/* Add Comment Input */}
-                <div className="flex items-center">
-                  <input
-                    type="text"
-                    placeholder="Add a comment..."
-                    className="w-full bg-[#09090A] text-gray-300 p-2 rounded-lg focus:outline-none text-sm"
-                    value={newComment[postId] || ""}
-                    onChange={(e) =>
-                      setNewComment((prev) => ({
-                        ...prev,
-                        [postId]: e.target.value,
-                      }))
-                    }
-                  />
-                  <button
-                    onClick={() => handleAddComment(postId)}
-                    className="ml-2 text-[#877EFF] hover:text-white text-sm"
-                  >
-                    Post
-                  </button>
+
+                  <div className="flex items-center mt-2">
+                    <input
+                      type="text"
+                      placeholder="Write a comment..."
+                      className="flex-1 bg-[#1a1a1a] px-1 md:px-3 py-2 rounded-lg text-white placeholder-gray-400 text-sm focus:outline-none"
+                      value={newComment[postId] || ""}
+                      onChange={(e) =>
+                        setNewComment((prev) => ({
+                          ...prev,
+                          [postId]: e.target.value,
+                        }))
+                      }
+                    />
+                    <button
+                      onClick={() => handleAddComment(postId)}
+                      className="ml-1 md:ml-2 text-[#877EFF] hover:text-white text-sm"
+                    >
+                      Post
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        );
-      })}
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
-    </div>   
+
   );
 }
 
