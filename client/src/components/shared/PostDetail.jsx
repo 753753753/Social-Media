@@ -7,9 +7,9 @@ import RealtedPost from "../ui/RealtedPost";
 const PostDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-   
+
     return (
-        <div className="px-2 md:p-6 bg-[#000000] h-screen text-white">
+        <div className="px-2 md:p-6 bg-[#000000] min-h-screen text-white">
             <button
                 className="text-[#877EFF] mb-6 cursor-pointer flex items-center gap-x-2"
                 onClick={() => navigate(-1)}
@@ -17,14 +17,16 @@ const PostDetail = () => {
                 <IoReturnUpBack />
                 <span>Back</span>
             </button>
-            {/* PostContent */}
-            <PostContent />
+
+            {/* Post Content */}
+            <div className="max-w-3xl mx-auto">
+                <PostContent />
+            </div>
 
             <hr className="my-6 border border-[#101012]" />
 
-            {/* MoreRelatedPost */}
+            {/* More Related Posts */}
             <RealtedPost />
-
         </div>
     );
 };

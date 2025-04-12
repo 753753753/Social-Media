@@ -56,14 +56,6 @@ function AllsavedPost() {
     }
   }, [dispatch, savedPostsArray]);
 
-  // Optionally, add a spinner if any loading is true.
-  if (postsLoading || savesLoading || likesLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="spinner"></div>
-      </div>
-    );
-  }
 
   // Handlers for like, save, and comment actions.
   const handleLikePost = (postId) => {

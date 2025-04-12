@@ -1,26 +1,26 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom";
 import PostCard from "../../components/shared/PostCard";
 import TopCreator from "../../components/shared/TopCreator";
-import { toast, ToastContainer } from "../../toaster/Toaster";
+import { ToastContainer } from "../../toaster/Toaster";
 
 const Home = () => {
   const location = useLocation();
 
-  useEffect(() => {
-    if (location.state?.showLoginToast) {
-      toast.success("Login successful! 🎉");
-    }
-    if (location.state?.showRegisterToast) {
-      toast.success("Registration successful! 🎉");
-    }
-    if (location.state?.showpostToast) {
-      toast.success("Post Created! 🎉");
-    }
-    if (location.state?.showprofileToast) {
-      toast.success("Edit successful! 🎉");
-    }
-  }, [location.state]);
+  // useEffect(() => {
+  //   if (location.state?.showLoginToast) {
+  //     toast.success("Login successful! 🎉");
+  //   }
+  //   if (location.state?.showRegisterToast) {
+  //     toast.success("Registration successful! 🎉");
+  //   }
+  //   if (location.state?.showpostToast) {
+  //     toast.success("Post Created! 🎉");
+  //   }
+  //   if (location.state?.showprofileToast) {
+  //     toast.success("Edit successful! 🎉");
+  //   }
+  // }, [location.state]);
 
   return (
     <>

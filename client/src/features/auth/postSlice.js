@@ -106,18 +106,12 @@ export const fetchotherPosts = createAsyncThunk(
   async (userid, { rejectWithValue }) => {
     try {
       const result = await getOtherUserPosts(userid);
-      console.log("API Response:", result);
-
       if (!Array.isArray(result.userpost)) {
         console.error("userpost is not an array:", result.userpost);
         return rejectWithValue("Invalid user posts data");
       }
-
       const updatedPosts = result.userpost.map((post) => {
-        console.log("Processing Post:", post);
-        
         if (post.image && post.image.data) {
-          console.log("Processing Image:", post.image.data.length); // Check image data length
           const uint8Array = new Uint8Array(post.image.data);
           const base64String = btoa(
             uint8Array.reduce((data, byte) => data + String.fromCharCode(byte), "")
@@ -127,8 +121,6 @@ export const fetchotherPosts = createAsyncThunk(
         
         return post;
       });
-
-      console.log("Updated Posts:", updatedPosts);
       return { otherposts: updatedPosts };
     } catch (error) {
       return rejectWithValue(error.message);
