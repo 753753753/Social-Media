@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchProfileAPI, loginUser, logout, registerUser } from "../../api/authapi";
+import { fetchSavedData } from './saveSlice';
 // Thunk to fetch the logged-in user's profile
 export const fetchAuthProfile  = createAsyncThunk(
   'auth/fetchProfile',
@@ -23,9 +24,9 @@ export const loginUserThunk = createAsyncThunk(
       if (data) {
         // Fetch user profile after successful login
         // console.log("Fetching user profile...");
-
+        await dispatch(fetchSavedData())     
         const profile = await dispatch(fetchAuthProfile ());  // Dispatch fetchProfile and wait for the response
-
+        
         // After fetching profile, return the profile data (action.payload) so it can be stored in Redux state
         return profile.payload;
       }
@@ -47,6 +48,7 @@ export const registerUserThunk = createAsyncThunk(
 
       if (data) {
         // Fetch user profile after successful registration
+        await dispatch(fetchSavedData())     
         const profile = await dispatch(fetchAuthProfile ());  // Dispatch fetchProfile and wait for the response
 
         // After fetching profile, return the profile data (action.payload) so it can be stored in Redux state
@@ -87,8 +89,6 @@ const initialState = {
   error: null,
   logoutStatus: null,
 };
-
-
 
 const authSlice = createSlice({
   name: 'auth',

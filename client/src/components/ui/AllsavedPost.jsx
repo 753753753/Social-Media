@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { CiHeart, CiSaveDown2 } from "react-icons/ci";
-import { FaHeart, FaRegComment } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { createComment, fetchComments } from "../../features/auth/commentSlice";
-import { fetchLikeData, toggleLike } from "../../features/auth/likeSlice";
-import { fetchSavedData, toggleSave } from "../../features/auth/saveSlice";
-
+// src/components/AllsavedPost.jsx
+import React, { useEffect } from 'react';
+import { CiHeart, CiSaveDown2 } from 'react-icons/ci';
+import { FaHeart, FaRegComment } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { fetchLikeData, toggleLike } from '../../features/auth/likeSlice';
+import { fetchSavedData, toggleSave } from '../../features/auth/saveSlice';
 const bufferToBase64 = (bufferObj) => {
   if (!bufferObj || !bufferObj.data) return "";
   const uint8Arr = new Uint8Array(bufferObj.data);
@@ -14,53 +13,59 @@ const bufferToBase64 = (bufferObj) => {
   uint8Arr.forEach((b) => (binary += String.fromCharCode(b)));
   return window.btoa(binary);
 };
-
 function AllsavedPost() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const { savedPostsArray } = useSelector((state) => state.saves);
-  const { likedPosts, likeCounts } = useSelector((state) => state.likes);
-  const commentsByPost = useSelector((state) => state.comments.commentsByPost);
-  const commentsLoading = useSelector((state) => state.comments.loading);
+
+  // Assume your posts slice contains all posts.
+  const { userPosts, loading: postsLoading } = useSelector((state) => state.posts);
+  // Get saved posts array from the saves slice.
+  const { savedPostsArray, loading: savesLoading } = useSelector((state) => state.saves);
+  // Get like data from the likes slice.
+  const { likedPosts, likeCounts, loading: likesLoading } = useSelector((state) => state.likes);
+  // Get comment data from the comment slice.
+
   const hasFetchedsavedpost = useSelector((state) => state.saves.hasFetchedsavedpost);
 
-  const [showComments, setShowComments] = useState({});
-  const [newComment, setNewComment] = useState({});
-  const [localComments, setLocalComments] = useState({});
+  // Initially fetch saved posts.
 
   useEffect(() => {
-    if (!hasFetchedsavedpost) {
+    if(!hasFetchedsavedpost){
       dispatch(fetchSavedData());
     }
   }, [dispatch]);
 
+  // Once savedPostsArray is available, fetch like data and comments for each post.
   useEffect(() => {
     if (Array.isArray(savedPostsArray) && savedPostsArray.length > 0) {
       const posts = savedPostsArray.map((item) => item.postId);
+      // Dispatch like data for all saved posts.
       dispatch(fetchLikeData(posts));
-      posts.forEach((post) => dispatch(fetchComments(post._id)));
+      // Dispatch comments fetch for each saved post.
     }
   }, [dispatch, savedPostsArray]);
 
-  const handleLikePost = (postId) => dispatch(toggleLike(postId));
-  const handleSavePost = (postId) => dispatch(toggleSave(postId));
-  const toggleComments = (postId) => setShowComments((prev) => ({ ...prev, [postId]: !prev[postId] }));
+  // Optionally, add a spinner if any loading is true.
+  if (postsLoading || savesLoading || likesLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
-  const handleAddComment = (postId) => {
-    if (!newComment[postId] || newComment[postId].trim() === "") return;
-    const commentText = newComment[postId].trim();
-    const optimisticComment = {
-      content: commentText,
-      userProfile: {
-        username: user?.profile?.username || "@newuser",
-        profilePicture: user?.profile?.profilePicture ? bufferToBase64(user.profile.profilePicture) : "",
-      },
-    };
-    setLocalComments((prev) => ({ ...prev, [postId]: [optimisticComment, ...(prev[postId] || [])] }));
-    dispatch(createComment({ postId, commentText }));
-    setNewComment((prev) => ({ ...prev, [postId]: "" }));
+  // Handlers for like, save, and comment actions.
+  const handleLikePost = (postId) => {
+    dispatch(toggleLike(postId));
   };
+
+  const handleSavePost = (postId) => {
+    dispatch(toggleSave(postId));
+  };
+
+
+
 
   return (
 <div className="w-full py-6 px-4 bg-black">
@@ -72,10 +77,6 @@ function AllsavedPost() {
         const postId = post._id;
         const isLiked = likedPosts[postId];
         const likeCount = likeCounts[postId] || 0;
-        const fetchedComments = commentsByPost[postId] || [];
-        const optimisticComments = localComments[postId] || [];
-        const postComments = [...fetchedComments, ...optimisticComments];
-
         return (
           <div
             key={postId}
@@ -108,77 +109,12 @@ function AllsavedPost() {
                   <span className="text-sm">{likeCount > 0 ? likeCount : ""}</span>
                 </span>
 
-                <span
-                  className="flex items-center gap-1 cursor-pointer hover:scale-110 transition"
-                  onClick={() => toggleComments(postId)}
-                >
-                  <FaRegComment className="text-[#877EFF] text-lg" />
-                  <span className="text-sm">{postComments.length}</span>
-                </span>
               </div>
 
               <span onClick={() => handleSavePost(postId)} className="cursor-pointer">
                 <CiSaveDown2 className="text-yellow-500 text-xl hover:text-yellow-400" />
               </span>
             </div>
-          {/* Comments Section */}
-          {showComments[postId] && (
-              <div className="px-4 pb-4 text-sm text-white space-y-2">
-                <div className="max-h-32 overflow-y-auto space-y-2">
-                  {commentsLoading ? (
-                    <p className="text-gray-400">Loading comments...</p>
-                  ) : postComments.length > 0 ? (
-                    postComments.map((comment, i) => (
-                      <div key={i} className="flex gap-2 items-start">
-                        <div className="w-8 h-8 rounded-full bg-gray-600 overflow-hidden">
-                          {comment.userProfile?.profilePicture ? (
-                            <img
-                              src={`data:image/png;base64,${comment.userProfile.profilePicture}`}
-                              alt="User"
-                              className="object-cover w-full h-full"
-                            />
-                          ) : (
-                            <div className="flex items-center justify-center h-full text-sm font-bold">
-                              {comment.userProfile?.username?.charAt(0).toUpperCase() || "U"}
-                            </div>
-                          )}
-                        </div>
-                        <div className="bg-[#1a1a1a] px-3 py-1 rounded-xl text-gray-300">
-                          <span className="font-semibold">
-                            {comment.userProfile?.username || "@user"}:
-                          </span>{" "}
-                          {comment.content}
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-gray-400">No comments yet.</p>
-                  )}
-                </div>
-  
-                {/* Add Comment Input */}
-                <div className="flex items-center mt-2">
-                  <input
-                    type="text"
-                    placeholder="Write a comment..."
-                    className="flex-1 bg-[#1a1a1a] px-1 md:px-3 py-2 rounded-lg text-white placeholder-gray-400 text-sm focus:outline-none"
-                    value={newComment[postId] || ""}
-                    onChange={(e) =>
-                      setNewComment((prev) => ({
-                        ...prev,
-                        [postId]: e.target.value,
-                      }))
-                    }
-                  />
-                  <button
-                    onClick={() => handleAddComment(postId)}
-                    className="ml-1 md:ml-2 text-[#877EFF] hover:text-white text-sm"
-                  >
-                    Post
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         );
       })

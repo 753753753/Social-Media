@@ -3,7 +3,6 @@ import { CiHeart, CiSaveDown2, CiSaveUp2 } from "react-icons/ci";
 import { FaHeart, FaRegComment } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createComment, fetchComments } from '../../features/auth/commentSlice';
 import { fetchLikeData, toggleLike } from "../../features/auth/likeSlice";
 import { fetchallPosts } from "../../features/auth/postSlice";
 import { fetchSavedData, toggleSave } from "../../features/auth/saveSlice";
@@ -19,20 +18,9 @@ const bufferToBase64 = (bufferObj) => {
 function MylikedPost() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  // Logged in user's data. Adjust the path if needed.
-  const user = useSelector((state) => state.auth.user);
-
   // Fetch all posts from the posts slice.
   const { allPosts, loading: postsLoading } = useSelector((state) => state.posts);
-  // Get comment data from the comment slice.
-  const commentsByPost = useSelector((state) => state.comments.commentsByPost);
-  const commentsLoading = useSelector((state) => state.comments.loading);
 
-  // Local state for toggling comment sections, new comment text, and optimistic comments.
-  const [showComments, setShowComments] = useState({});
-  const [newComment, setNewComment] = useState({});
-  const [localComments, setLocalComments] = useState({});
 
   // Fetch posts on component mount.
   useEffect(() => {
@@ -71,9 +59,6 @@ function MylikedPost() {
     if (Array.isArray(allLikedPosts) && allLikedPosts.length > 0) {
       const posts = allLikedPosts.map((item) => item.postId);
       // Dispatch comments fetch for each saved post.
-      posts.forEach((post) => {
-        dispatch(fetchComments(post._id));
-      });
     }
   }, [dispatch, allLikedPosts]);
 
@@ -95,34 +80,8 @@ function MylikedPost() {
     );
   }
 
-  const toggleComments = (postId) => {
-    setShowComments((prev) => ({ ...prev, [postId]: !prev[postId] }));
-  };
 
-  const handleAddComment = (postId) => {
-    if (!newComment[postId] || newComment[postId].trim() === "") return;
-    const commentText = newComment[postId].trim();
 
-    const optimisticComment = {
-      content: commentText,
-      userProfile: {
-        username: user?.profile?.username || "@newuser",
-        profilePicture: user?.profile?.profilePicture
-          ? bufferToBase64(user.profile.profilePicture)
-          : "",
-      },
-    };
-
-    // Prepend the optimistic comment.
-    setLocalComments((prev) => {
-      const current = prev[postId] || [];
-      return { ...prev, [postId]: [optimisticComment, ...current] };
-    });
-
-    dispatch(createComment({ postId, commentText }));
-    // Clear the input.
-    setNewComment((prev) => ({ ...prev, [postId]: "" }));
-  };
   return (
     <div className="w-full py-6 px-4 bg-black">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-auto items-start">
@@ -132,10 +91,6 @@ function MylikedPost() {
 
           const isLiked = likedPosts[postId];
           const likeCount = likeCounts[postId] || 0;
-          const fetchedComments = commentsByPost[postId] || [];
-          const optimisticComments = localComments[postId] || [];
-          const allComments = [...fetchedComments, ...optimisticComments];
-
           return (
             <div
               key={postId}
@@ -166,13 +121,6 @@ function MylikedPost() {
                     <span className="text-sm">{likeCount > 0 ? likeCount : ""}</span>
                   </span>
 
-                  <span
-                    className="flex items-center gap-1 cursor-pointer hover:scale-110 transition"
-                    onClick={() => toggleComments(postId)}
-                  >
-                    <FaRegComment className="text-[#877EFF] text-lg" />
-                    <span className="text-sm">{allComments.length}</span>
-                  </span>
                 </div>
 
                 <span onClick={() => handleSavePost(postId)} className="cursor-pointer">
@@ -183,63 +131,6 @@ function MylikedPost() {
                   )}
                 </span>
               </div>
-
-              {showComments[postId] && (
-                <div className="px-4 pb-4 text-sm text-white space-y-2">
-                  <div className="max-h-32 overflow-y-auto space-y-2">
-                    {commentsLoading ? (
-                      <p className="text-gray-400">Loading comments...</p>
-                    ) : allComments.length > 0 ? (
-                      allComments.map((comment, idx) => (
-                        <div key={idx} className="flex gap-2 items-start">
-                          <div className="w-8 h-8 rounded-full bg-gray-600 overflow-hidden">
-                            {comment.userProfile?.profilePicture ? (
-                              <img
-                                src={`data:image/png;base64,${comment.userProfile.profilePicture}`}
-                                alt="User"
-                                className="object-cover w-full h-full"
-                              />
-                            ) : (
-                              <div className="flex items-center justify-center h-full text-sm font-bold">
-                                {comment.userProfile?.username?.charAt(0).toUpperCase()}
-                              </div>
-                            )}
-                          </div>
-                          <div className="bg-[#1a1a1a] px-3 py-1 rounded-xl text-gray-300">
-                            <span className="font-semibold">
-                              {comment.userProfile?.username || "@user"}:
-                            </span>{" "}
-                            {comment.content}
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-gray-400">No comments yet.</p>
-                    )}
-                  </div>
-
-                  <div className="flex items-center mt-2">
-                    <input
-                      type="text"
-                      placeholder="Write a comment..."
-                      className="flex-1 bg-[#1a1a1a] px-1 md:px-3 py-2 rounded-lg text-white placeholder-gray-400 text-sm focus:outline-none"
-                      value={newComment[postId] || ""}
-                      onChange={(e) =>
-                        setNewComment((prev) => ({
-                          ...prev,
-                          [postId]: e.target.value,
-                        }))
-                      }
-                    />
-                    <button
-                      onClick={() => handleAddComment(postId)}
-                      className="ml-1 md:ml-2 text-[#877EFF] hover:text-white text-sm"
-                    >
-                      Post
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
           );
         })}
