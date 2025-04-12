@@ -1,7 +1,7 @@
 // src/components/AllsavedPost.jsx
 import React, { useEffect } from 'react';
 import { CiHeart, CiSaveDown2 } from 'react-icons/ci';
-import { FaHeart, FaRegComment } from 'react-icons/fa';
+import { FaHeart } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchLikeData, toggleLike } from '../../features/auth/likeSlice';
@@ -85,7 +85,7 @@ function AllsavedPost() {
             {/* Post Image */}
             <div
               className="h-[250px] sm:h-[300px] cursor-pointer"
-              onClick={() => navigate(`/post/${postId}`)}
+              onClick={() => navigate(`/post/${postId}/user/${post.userId}`)}
             >
               <img
                 src={`data:image/png;base64,${post.image}`}
