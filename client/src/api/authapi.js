@@ -1,5 +1,5 @@
-const BASE_URL = "http://localhost:3000";
-// const BASE_URL = "https://social-media-backend-alpha.vercel.app"; 
+// const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://social-media-backend-alpha.vercel.app"; 
 
 // Save token in localStorage
 const saveToken = (token) => {
