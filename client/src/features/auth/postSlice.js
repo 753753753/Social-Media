@@ -149,6 +149,7 @@ const postSlice = createSlice({
     error: null,
     uploading: false,
     uploadError: null,
+    hasFetchedAllPosts: false, // <-- Add this
   },
   extraReducers: (builder) => {
     // fetchUserPosts
@@ -187,6 +188,7 @@ const postSlice = createSlice({
       .addCase(fetchallPosts.fulfilled, (state, action) => {
         state.loading = false;
         state.allPosts = action.payload.allposts;
+        state.hasFetchedAllPosts = true; // <-- Mark as fetched
       })
       .addCase(fetchallPosts.rejected, (state, action) => {
         state.loading = false;

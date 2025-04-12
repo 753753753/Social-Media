@@ -141,7 +141,7 @@ function MylikedPost() {
                 src={`data:image/png;base64,${post?.image}`}
                 alt="Post Thumbnail"
                 className="w-full h-full object-cover"
-                onClick={() => navigate(`/post/${post._id}`)}
+                onClick={() => navigate(`/post/${post._id}/user/${post.userId}`)}
               />
             </div>
   

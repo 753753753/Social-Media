@@ -41,7 +41,7 @@ function App() {
           <Route element={<ProtectedRoutes />}>
             <Route path="/home" element={<Home />} />
             <Route path="/profile" element={<ProfileLayout />} />
-            <Route path="/post/:id" element={<PostDetail />} />
+            <Route path="/post/:id/user/:userId" element={<PostDetail />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="/editprofile" element={<EditProfile />} />
             <Route path="/saved" element={<SavedPost />} />

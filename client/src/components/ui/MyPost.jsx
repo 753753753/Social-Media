@@ -115,7 +115,7 @@ const MyPost = () => {
                   src={post.image}
                   alt="Post Thumbnail"
                   className="w-full h-full object-cover"
-                  onClick={() => navigate(`/post/${post._id}`)}
+                  onClick={() => navigate(`/post/${post._id}/user/${post.userId._id}`)}
                 />
               </div>
               <div className="p-4 flex items-center justify-between text-gray-400">

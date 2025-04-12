@@ -33,10 +33,14 @@ function AllsavedPost() {
   const [showComments, setShowComments] = useState({});
   const [newComment, setNewComment] = useState({});
   const [localComments, setLocalComments] = useState({});
+  const hasFetchedsavedpost = useSelector((state) => state.saves.hasFetchedsavedpost);
 
   // Initially fetch saved posts.
+
   useEffect(() => {
-    dispatch(fetchSavedData());
+    if(!hasFetchedsavedpost){
+      dispatch(fetchSavedData());
+    }
   }, [dispatch]);
 
   // Once savedPostsArray is available, fetch like data and comments for each post.

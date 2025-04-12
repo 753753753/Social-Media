@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createComment, fetchComments } from "../../features/auth/commentSlice";
 import { fetchLikeData, toggleLike } from "../../features/auth/likeSlice";
-import { fetchSavedData, toggleSave } from "../../features/auth/saveSlice";
+import { toggleSave } from "../../features/auth/saveSlice";
+
 const bufferToBase64 = (bufferObj) => {
   if (!bufferObj || !bufferObj.data) return "";
   const uint8Arr = new Uint8Array(bufferObj.data);
@@ -41,7 +42,6 @@ function ExplorePost({ posts }) {
     if (posts.length > 0) {
       dispatch(fetchLikeData(posts));
     }
-    dispatch(fetchSavedData());
   }, [dispatch, posts]);
 
   // Fetch comments for all posts.
@@ -127,7 +127,7 @@ function ExplorePost({ posts }) {
                 src={`data:image/png;base64,${post.image}`}
                 alt="Post Thumbnail"
                 className="w-full h-full object-cover"
-                onClick={() => navigate(`/post/${postId}`)}
+                onClick={() => navigate(`/post/${post._id}/user/${post.userId}`)}
               />
             </div>
 

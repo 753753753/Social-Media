@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { loginUserThunk } from '../../features/auth/authSlice';
 import { toast, ToastContainer } from '../../toaster/Toaster';
-
+import { fetchallPosts } from '../../features/auth/postSlice';
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.auth);
-  
+
   const [form, setForm] = useState({});
 
   const handleChange = (e) => {

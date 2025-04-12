@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { createComment, fetchComments } from "../../features/auth/commentSlice";
 import { fetchLikeData, toggleLike } from "../../features/auth/likeSlice";
 import { fetchallPosts } from "../../features/auth/postSlice";
-import { fetchSavedData, toggleSave } from "../../features/auth/saveSlice";
+import { toggleSave } from "../../features/auth/saveSlice";
+
 // Helper to convert a Buffer to a Base64 string.
 const bufferToBase64 = (bufferObj) => {
   if (!bufferObj || !bufferObj.data) return "";
@@ -36,12 +37,13 @@ function PostCard() {
   const [newComment, setNewComment] = useState({});
   // Local state for optimistically added comments per post.
   const [localComments, setLocalComments] = useState({});
+  const hasFetchedAllPosts = useSelector((state) => state.posts.hasFetchedAllPosts);
 
   useEffect(() => {
-    dispatch(fetchallPosts());
-    dispatch(fetchSavedData());
-  }, [dispatch]);
-
+    if (!hasFetchedAllPosts) {
+      dispatch(fetchallPosts());
+    }
+  }, [dispatch, hasFetchedAllPosts]);
   // When posts are loaded, fetch like data.
   useEffect(() => {
     if (allPosts.length > 0) {
@@ -99,14 +101,7 @@ function PostCard() {
     // Clear input for this post.
     setNewComment((prev) => ({ ...prev, [postId]: "" }));
   };
-
-  if (postsLoading || likesLoading) {
-    return (
-      <div className="flex justify-center h-screen">
-        <div className="spinner"></div>
-      </div>
-    );
-  }
+   
 
   return (
     <div>
@@ -172,7 +167,7 @@ function PostCard() {
                   src={`data:image/png;base64,${post.image}`}
                   alt="Post"
                   className="w-full h-auto max-h-[80vh] object-cover rounded-none md:rounded-lg"
-                  onClick={() => navigate(`/post/${post._id}`)}
+                  onClick={() => navigate(`/post/${post._id}/user/${post.userId}`)}
                 />
               )}
 

@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { createComment, fetchComments } from "../../features/auth/commentSlice";
 import { fetchLikeData, toggleLike } from "../../features/auth/likeSlice";
 import { fetchPostDetail } from "../../features/auth/postSlice";
-import { fetchSavedData, toggleSave } from "../../features/auth/saveSlice";
+import { toggleSave } from "../../features/auth/saveSlice";
 // Helper to convert a Buffer to a Base64 string.
 const bufferToBase64 = (bufferObj) => {
     if (!bufferObj || !bufferObj.data) return "";
@@ -49,7 +49,6 @@ function PostContent() {
     useEffect(() => {
         if (postDetail) {
             dispatch(fetchLikeData([postDetail])); // pass as an array
-            dispatch(fetchSavedData());
             dispatch(fetchComments(postDetail._id));
         }
     }, [dispatch, postDetail]);

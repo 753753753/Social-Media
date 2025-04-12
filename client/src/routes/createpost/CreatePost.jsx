@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createPost } from "../../features/auth/postSlice";
+import { createPost, fetchallPosts } from "../../features/auth/postSlice";
 import { toast } from '../../toaster/Toaster';
 
 const CreatePost = () => {
@@ -33,6 +33,7 @@ const CreatePost = () => {
     // Dispatch the createPost thunk
     const resultAction = await dispatch(createPost(formData));
     if (createPost.fulfilled.match(resultAction)) {
+      dispatch(fetchallPosts())
       navigate('/home', { state: { showpostToast: true } });
     } else {
       toast.error("Error uploading post..!!");

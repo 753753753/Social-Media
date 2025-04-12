@@ -31,13 +31,14 @@ export const fetchSavedData = createAsyncThunk(
 // Thunk to toggle save status for a given post
 export const toggleSave = createAsyncThunk(
   'saves/toggleSave',
-  async (postId, { getState, rejectWithValue }) => {
+  async (postId, { getState, dispatch, rejectWithValue }) => {
     try {
       // Call the API to save (or unsave) the post
       await savedpost({ postId });
       // Optimistic update: get the current state
       const { saves } = getState();
       const currentSaved = saves.savedPosts[postId] || false;
+      await dispatch(fetchSavedData())
       return { postId, toggleTo: !currentSaved };
     } catch (error) {
       return rejectWithValue(error.message);
@@ -52,6 +53,7 @@ const saveSlice = createSlice({
     savedPostsArray: [],   // Array of full saved post objects
     loading: false,
     error: null,
+    hasFetchedsavedpost: false, // <-- Add this
   },
   reducers: {
     // Optional additional reducers
@@ -67,6 +69,7 @@ const saveSlice = createSlice({
         state.loading = false;
         state.savedPosts = action.payload.savedMap;
         state.savedPostsArray = action.payload.savedPostsArray;
+        state.hasFetchedsavedpost = true; // <-- Mark as fetched
       })
       .addCase(fetchSavedData.rejected, (state, action) => {
         state.loading = false;

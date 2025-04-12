@@ -182,6 +182,7 @@ export const getpost = async () => {
         }
 
         const data = await response.json();
+        console.log(data)
         return data; // Return API response
     } catch (error) {
         console.error("Error updating profile:", error);
@@ -271,6 +272,7 @@ export const getsavedpost = async () => {
         }
 
         const data = await response.json();
+        console.log(data)
         return data; // Return API response
     } catch (error) {
         console.error("Error updating profile:", error);
