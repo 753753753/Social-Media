@@ -6,7 +6,7 @@ const expressSession = require('express-session')
 
 // Middleware
 app.use(cors({
-  origin: ["http://localhost:5173", "https://social-media-client-l4pk.onrender.com"],
+  origin: ["http://localhost:5173", "https://social-media-client-l4pk.onrender.com" , "https://social-media-gules-psi.vercel.app"],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],
   methods: ["GET", "POST", "PUT", "DELETE"]
