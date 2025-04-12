@@ -40,7 +40,7 @@ app.use('/post', postroutes)
 app.use('/comment', commentroutes)
 app.use('/', userroutes)
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server running at ${PORT}`);
