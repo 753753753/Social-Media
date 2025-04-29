@@ -60,6 +60,7 @@ router.post('/login', async (req, res) => {
                 return res.json(false)
             }
             let token = generateToken(user);
+            console.log(token)
             // // res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "Lax" });
             // res.cookie("token", token, {
             //     httpOnly: true,
